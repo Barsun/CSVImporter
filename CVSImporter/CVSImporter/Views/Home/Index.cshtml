@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<section class="featured">
+    <div class="content-wrapper">
+
+        <p>
+            This app will imports postcode information in CSV format and stores it in a database.
+            The app will allow then to edit each row present in the database and save it.
+            App include the option to filter by postcode and others columns.
+
+        <p>The solution include:</p>
+        <ol>
+            <li>Good separation of data, business logic and presentation layers.</li>
+            <li> The views should be built in Razor</li>
+            <li> Communication from the client side browser to the server side via JavaScript (Ajax, Web API, etc)</li>
+            <li> Use of entity framework with a SQL database</li>
+            <li> A few good unit tests in a unit test project</li>
+        </ol>
+
+
+        </p>
+    </div>
+</section>
+<section>
+    <div class="row">
+        @using (Ajax.BeginForm("UploadFile", "home", new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="file" name="files" id="fu1" />
+            <input type="submit" value="Upload File" />
+
+        }
+
+        <div class="progress">
+            <div class="progress-bar">0%</div>
+        </div>
+        <div id="status"></div>
+        <style>
+            .progress {
+                position: relative;
+                width: 400px;
+                border: 1px solid #ddd;
+                padding: 1px;
+            }
+
+            .progress-bar {
+                width: 0px;
+                height: 20px;
+                background-color: #57be65;
+            }
+        </style>
+        @section scripts{
+            <script src="http://malsup.github.com/jquery.form.js"></script>
+            <script>
+  (function () {
+  var bar = $('.progress-bar');
+  var percent = $('.progress-bar');
+  var status = $('#status');
+
+  $('form').ajaxForm({
+  beforeSend: function () {
+  status.empty();
+  var percentValue = '0%';
+  bar.width(percentValue);
+  percent.html(percentValue);
+  },
+  uploadProgress: function (event, position, total, percentComplete) {
+  var percentValue = percentComplete + '%';
+  bar.width(percentValue);
+  percent.html(percentValue);
+  },
+  success: function (d) {
+  var percentValue = '100%';
+  bar.width(percentValue);
+  percent.html(percentValue);
+  $('#fu1').val('');
+  alert(d);
+  },
+  complete: function (xhr) {
+  status.html(xhr.responseText);
+  }
+  });
+  })();
+            </script>
+        }
+    </div>
+</section>
